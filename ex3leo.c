@@ -31,31 +31,9 @@ int maior(mtr time1,mtr time2)//retorna 1 se time 1 e melhor ranqueado
     }
     return 0;
 }
-int quicksort( mtr *vet,int ini,int fim)//ordena o bagulho
-{
-    int c1,c2;
-    int pivo=fim;
-    mtr temp;
 
-    for(c1=ini,c2=fim-1;c1<=fim;c1++)//divide o vetor
-    {
-        if(maior(vet[pivo],vet[c1]))//pivo>c1
-        {
-            c2++;
-            temp=vet[c1];
-            vet[c1]=vet[c2];
-            vet[c2]=temp;
-        }
-    }
+//quicksort
 
-    temp=vet[pivo];
-    vet[pivo]=vet[c2+1];
-    vet[c2+1]=vet[pivo];
-    pivo=c2+1;//coloca o pivo no lugar certo
-
-    quicksort(vet,pivo,fim);
-    quicksort(vet,ini,pivo);
-}
 int *solucao(struct entrada *entradas, int m, int n_teams)
 {
     int *ret = (int *) malloc(n_teams * sizeof(int));
@@ -76,30 +54,30 @@ int *solucao(struct entrada *entradas, int m, int n_teams)
     }
 
 
-    for(c1=m;c1>0;c1--)//atribui os pontos de cada time
+    for(c1=0;c1<m;c1++)//atribui os pontos de cada time
     {
-        mtr1[entradas[c1].x-1].feitos+=entradas[c1].z;//soma as cestas do time entradas[c1].x
+        mtr1[entradas[c1].x-1].feitos+=entradas[c1].y;//soma as cestas do time entradas[c1].x
         mtr1[entradas[c1].x-1].sofridos+=entradas[c1].w;//soma as cestas sofridos do time entradas[c1].x
 
-        mtr1[entradas[c1].y-1].feitos+=entradas[c1].w;//soma as cestas do time entradas[c1].y
-        mtr1[entradas[c1].y-1].sofridos+=entradas[c1].z;//soma as cestas sofridos do time entradas[c1].y
+        mtr1[entradas[c1].z-1].feitos+=entradas[c1].w;//soma as cestas do time entradas[c1].z
+        mtr1[entradas[c1].z-1].sofridos+=entradas[c1].y;//soma as cestas sofridos do time entradas[c1].z
 
-        if(entradas[c1].w>entradas[c1].z)//soma dos pontos
+        if(entradas[c1].w<entradas[c1].y)//soma dos pontos
         {
             mtr1[entradas[c1].x-1].pontos+=2;//vitori de x
-            mtr1[entradas[c1].y-1].pontos++;
+            mtr1[entradas[c1].z-1].pontos++;
         }
         else
         {
-            if(entradas[c1].w==entradas[c1].z)
+            if(entradas[c1].w==entradas[c1].y)
             {//empate
             }
-            mtr1[entradas[c1].y-1].pontos+=2;//vitoria de y
+            mtr1[entradas[c1].z-1].pontos+=2;//vitoria de z
             mtr1[entradas[c1].x-1].pontos++;
         }
     }
 
-    for(c1=0;1<n_teams;c1++)//faz media!!!
+    for(c1=0;c1<n_teams;c1++)//faz media!!!
     {
         if(mtr1[c1].sofridos==0)
         {
