@@ -1,6 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+/*
+1
+5
+1 102 2 62
+1 128 3 127
+1 144 4 80
+1 102 5 101
+2 62 3 61
+2 100 4 80
+2 88 5 82
+3 79 4 90
+3 87 5 100
+4 110 5 99
+*/
 struct entrada {
     int x, y, z, w;
 };
@@ -65,24 +78,24 @@ int *solucao(struct entrada *entradas, int m, int n_teams)
 
     for(c1=m;c1>0;c1--)//atribui os pontos de cada time
     {
-        mtr1[entradas[c1].x].feitos+=entradas[c1].z;//soma as cestas do time entradas[c1].x
-        mtr1[entradas[c1].x].sofridos+=entradas[c1].w;//soma as cestas sofridos do time entradas[c1].x
+        mtr1[entradas[c1].x-1].feitos+=entradas[c1].z;//soma as cestas do time entradas[c1].x
+        mtr1[entradas[c1].x-1].sofridos+=entradas[c1].w;//soma as cestas sofridos do time entradas[c1].x
 
-        mtr1[entradas[c1].y].feitos+=entradas[c1].w;//soma as cestas do time entradas[c1].y
-        mtr1[entradas[c1].y].sofridos+=entradas[c1].z;//soma as cestas sofridos do time entradas[c1].y
+        mtr1[entradas[c1].y-1].feitos+=entradas[c1].w;//soma as cestas do time entradas[c1].y
+        mtr1[entradas[c1].y-1].sofridos+=entradas[c1].z;//soma as cestas sofridos do time entradas[c1].y
 
         if(entradas[c1].w>entradas[c1].z)//soma dos pontos
         {
-            mtr1[entradas[c1].x].pontos+=2;//vitori de x
-            mtr1[entradas[c1].y].pontos++;
+            mtr1[entradas[c1].x-1].pontos+=2;//vitori de x
+            mtr1[entradas[c1].y-1].pontos++;
         }
         else
         {
             if(entradas[c1].w==entradas[c1].z)
             {//empate
             }
-            mtr1[entradas[c1].y].pontos+=2;//vitoria de y
-            mtr1[entradas[c1].x].pontos++;
+            mtr1[entradas[c1].y-1].pontos+=2;//vitoria de y
+            mtr1[entradas[c1].x-1].pontos++;
         }
     }
 
