@@ -45,8 +45,8 @@ int *solucao(struct entrada *entradas, int n, int p)
 int main()
 {
     int *ret;
-    int t, i, j;
-    int T, N, P, ID, A, L, C;
+    int t, i;
+    int T, N, P;
 
     scanf("%d",&T);
 
