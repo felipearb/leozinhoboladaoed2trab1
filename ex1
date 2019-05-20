@@ -1,11 +1,3 @@
-/*  Aluno:
-    Aluno:
-----------------------------------------
-t=numero de testes(1 ≤ t ≤ 100)
-n=numero total de cargas (1 ≤ n ≤ 10^5)
-p=numero de cargas por motorista(1 ≤ p ≤ n)
-
-*/
 #include <stdio.h>
 #include <stdlib.h>
 
