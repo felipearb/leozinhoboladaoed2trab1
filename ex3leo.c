@@ -22,7 +22,7 @@ struct entrada {
     int pontos,media,feitos,sofridos,id;
     }mtr;
 
-int maiorq(mtr time1,mtr time2)//retorna 1 se time 1 e melhor ranqueado
+int maiorq(mtr time1,mtr time2)//retorna 1 se time 1 e melhor ranqueado parece estar certo
 {
     if(time1.pontos>time2.pontos/*caso1*/  ||  ((time1.pontos==time2.pontos)&&(time1.media>time2.media))/*caso2*/ || ((time1.pontos==time2.pontos)&&(time1.media==time2.media)&&(time1.feitos>time2.feitos))/*caso 3*/||((time1.pontos==time2.pontos)&&(time1.media==time2.media)&&(time1.feitos==time2.feitos)&&(time1.id<time2.id))/*caso4*/ )
     {
@@ -32,39 +32,56 @@ int maiorq(mtr time1,mtr time2)//retorna 1 se time 1 e melhor ranqueado
     return 0;
 }
 
-//mergesort
-void merging(mtr *a,mtr *b,int low, int mid, int high) {
-   int l1, l2, i;
+/*void bubble(mtr *intera,int tam)// pode estar errado
+{
+    int c1,c2;
+    mtr temp;
 
-   for(l1 = low, l2 = mid + 1, i = low; l1 <= mid && l2 <= high; i++) {
-      if (!maiorq(a[l1],a[l2]))
-         b[i] = a[l1++];
-      else
-         b[i] = a[l2++];
-   }
+     for(c2=1;c2<=tam-1;c2++)// bubble sort
+    {
+     for(c1=0;c1<tam-c2;c1++)
+        {
+            if(maiorq(intera[c1],intera[c1+1]))
+            {
+                temp=intera[c1+1];
+                intera[c1]=intera[c1+1];
+                intera[c1]=temp;
 
-   while(l1 <= mid)
-      b[i++] = a[l1++];
+            }
+        }
+    }
+}*/
 
-   while(l2 <= high)
-      b[i++] = a[l2++];
 
-   for(i = low; i <= high; i++)
-      a[i] = b[i];
+void quicksort( mtr *vetor, int inicio, int fim){//pode estra errado
+
+   int  i, j, meio;
+   mtr pivo, aux;
+
+   i = inicio;
+   j = fim;
+
+   meio = (int) ((i + j) / 2);
+   pivo = vetor[meio];
+
+   do{
+      while (maiorq(pivo,vetor[1])) i = i + 1;
+      while (maiorq(vetor[j],pivo)) j = j - 1;
+
+      if(i <= j){
+         aux = vetor[i];
+         vetor[i] = vetor[j];
+         vetor[j] = aux;
+         i = i + 1;
+         j = j - 1;
+      }
+   }while(j > i);
+
+   if(inicio < j) quicksort(vetor, inicio, j);
+   if(i < fim) quicksort(vetor, i, fim);
+
 }
 
-void sort(mtr *a, mtr *b,int low, int high) {
-   int mid;
-
-   if(low < high) {
-      mid = (low + high) / 2;
-      sort(a,b,low, mid);
-      sort(a,b,mid+1, high);
-      merging(a,b,low, mid, high);
-   } else {
-      return;
-   }
-}
 
 int *solucao(struct entrada *entradas, int m, int n_teams)
 {
@@ -72,10 +89,9 @@ int *solucao(struct entrada *entradas, int m, int n_teams)
 
     int c1;
     int *rank;
-    mtr *mtr1,*mtr2;
+    mtr *mtr1;
 
     mtr1=calloc(sizeof(mtr),n_teams);//matriz de n vetores,
-    mtr2=calloc(sizeof(mtr),n_teams);
 
 
     rank=calloc(sizeof(int),n_teams);
@@ -103,11 +119,12 @@ int *solucao(struct entrada *entradas, int m, int n_teams)
         }
         else
         {
-            if(entradas[c1].w==entradas[c1].y)
-            {//empate
+            if(entradas[c1].w!=entradas[c1].y)
+            {
+                mtr1[entradas[c1].z-1].pontos+=2;//vitoria de z
+                mtr1[entradas[c1].x-1].pontos++;
             }
-            mtr1[entradas[c1].z-1].pontos+=2;//vitoria de z
-            mtr1[entradas[c1].x-1].pontos++;
+            //empate
         }
     }
 
@@ -123,12 +140,15 @@ int *solucao(struct entrada *entradas, int m, int n_teams)
         }
 
     }
-    if(!maiorq(mtr1[0],mtr1[1]))
-    {
-        printf("deu bom");
-    }
-    sort(mtr1,mtr2,0,n_teams-1);
 
+    //bubble(mtr1,n_teams);// nao funciona com esse
+
+    quicksort(mtr1,0,n_teams-1);// nao funciona com esse
+
+    for(c1=0;c1<n_teams;c1++)
+    {
+        ret[c1]=mtr1[c1].id;
+    }
 
     return ret;
 }
