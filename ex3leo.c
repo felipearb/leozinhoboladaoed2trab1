@@ -22,9 +22,9 @@ struct entrada {
     int pontos,media,feitos,sofridos,id;
     }mtr;
 
-int maior(mtr time1,mtr time2)//retorna 1 se time 1 e melhor ranqueado
+int maiorq(mtr time1,mtr time2)//retorna 1 se time 1 e melhor ranqueado
 {
-    if(time1.pontos>time2.pontos/*caso1*/  ||  ((time1.pontos==time2.pontos)&&(time1.media>time2.media))/*caso2*/ || ((time1.pontos==time2.pontos)&&(time1.media==time2.media)&&(time1.pontos==time2.pontos)&&(time1.feitos>time2.feitos))/*caso 3*/||((time1.pontos==time2.pontos)&&(time1.media==time2.media)&&(time1.pontos==time2.pontos)&&(time1.feitos==time2.feitos)&&(time1.id<time2.id))/*caso4*/ )
+    if(time1.pontos>time2.pontos/*caso1*/  ||  ((time1.pontos==time2.pontos)&&(time1.media>time2.media))/*caso2*/ || ((time1.pontos==time2.pontos)&&(time1.media==time2.media)&&(time1.feitos>time2.feitos))/*caso 3*/||((time1.pontos==time2.pontos)&&(time1.media==time2.media)&&(time1.feitos==time2.feitos)&&(time1.id<time2.id))/*caso4*/ )
     {
         //time1>time2
         return 1;
@@ -32,7 +32,39 @@ int maior(mtr time1,mtr time2)//retorna 1 se time 1 e melhor ranqueado
     return 0;
 }
 
-//quicksort
+//mergesort
+void merging(mtr *a,mtr *b,int low, int mid, int high) {
+   int l1, l2, i;
+
+   for(l1 = low, l2 = mid + 1, i = low; l1 <= mid && l2 <= high; i++) {
+      if (!maiorq(a[l1],a[l2]))
+         b[i] = a[l1++];
+      else
+         b[i] = a[l2++];
+   }
+
+   while(l1 <= mid)
+      b[i++] = a[l1++];
+
+   while(l2 <= high)
+      b[i++] = a[l2++];
+
+   for(i = low; i <= high; i++)
+      a[i] = b[i];
+}
+
+void sort(mtr *a, mtr *b,int low, int high) {
+   int mid;
+
+   if(low < high) {
+      mid = (low + high) / 2;
+      sort(a,b,low, mid);
+      sort(a,b,mid+1, high);
+      merging(a,b,low, mid, high);
+   } else {
+      return;
+   }
+}
 
 int *solucao(struct entrada *entradas, int m, int n_teams)
 {
@@ -40,9 +72,11 @@ int *solucao(struct entrada *entradas, int m, int n_teams)
 
     int c1;
     int *rank;
-    mtr *mtr1;
+    mtr *mtr1,*mtr2;
 
     mtr1=calloc(sizeof(mtr),n_teams);//matriz de n vetores,
+    mtr2=calloc(sizeof(mtr),n_teams);
+
 
     rank=calloc(sizeof(int),n_teams);
 
@@ -89,8 +123,11 @@ int *solucao(struct entrada *entradas, int m, int n_teams)
         }
 
     }
-
-    //quicksort
+    if(!maiorq(mtr1[0],mtr1[1]))
+    {
+        printf("deu bom");
+    }
+    sort(mtr1,mtr2,0,n_teams-1);
 
 
     return ret;
