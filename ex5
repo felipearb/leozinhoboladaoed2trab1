@@ -1,1 +1,85 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int _mergeSort(int *A, int temp[], int left, int right);
+int merge(int *A, int temp[], int left, int mid, int right);
+int mergeSort(int *A, int tam);
+
+int solucao(int *A, int n)
+{
+    int count=mergeSort(A,n);
+    return count;
+}
+
+int main()
+{
+    int t, i;
+    int T, N;
+
+    scanf("%d", &T);
+
+    for (t = 1; t <= T; t++) {
+
+        scanf("%d", &N);
+        int *municao = (int *) malloc(N * sizeof(int));
+
+        for (i = 0; i < N; i++) {
+            scanf(" %d", &municao[i]);
+        }
+        int trocas = solucao(municao, N);
+
+        if (trocas % 2 == 0)
+            printf("Total de trocas %d. Silva vai distribuir as caixas.\n", trocas);
+        else
+            printf("Total de trocas %d. Pereira vai distribuir as caixas.\n", trocas);
+    }
+
+    return 0;
+}
+
+int _mergeSort(int *A, int temp[], int left, int right);
+int merge(int *A, int temp[], int left, int mid, int right);
+
+int mergeSort(int *A, int tam)
+{
+    int* temp = (int*)malloc(sizeof(int) * tam);
+    return _mergeSort(A, temp, 0, tam - 1);
+}
+
+int _mergeSort(int *A, int temp[], int left, int right)
+{
+    int mid, count = 0;
+    if (right > left) {
+        mid = (right + left) / 2;
+        count = _mergeSort(A, temp, left, mid);
+        count += _mergeSort(A, temp, mid + 1, right);
+        count += merge(A, temp, left, mid + 1, right);
+    }
+    return count;
+}
+
+int merge(int *A, int temp[], int left, int mid, int right)
+{
+    int count = 0;
+    int i = left;
+    int j = mid;
+    int k = left;
+    while ((i <= mid - 1) && (j <= right)) {
+        if (A[i] <= A[j]) {
+            temp[k++] = A[i++];
+        }
+        else {
+            count = count + (mid - i);
+            temp[k++] = A[j++];
+        }
+    }
+    while (i <= mid - 1)
+        temp[k++] = A[i++];
+    while (j <= right)
+        temp[k++] = A[j++];
+    for (i = left; i <= right; i++)
+        A[i] = temp[i];
+
+    return count;
+}
 
